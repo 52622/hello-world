@@ -6,4 +6,4 @@
 5. Click Commit changes button.
 6. Hello World! Hello Github! 
 
-* [main](main/java/Main.java)
+* [main](src/main/java/Main.java)
