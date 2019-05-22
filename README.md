@@ -1,9 +1,6 @@
-# hello-world
-1. Click the README.md file.
-2. Click the  pencil icon in the upper right corner of the file view to edit.
-3. In the editor, write a bit about yourself.
-4. Write a commit message that describes your changes.
-5. Click Commit changes button.
-6. Hello World! Hello Github! 
-
-* [main](src/main/java/Main.java)
+菜鸟一枚，github都还没怎么搞懂。<br>
+从来没有做笔记的习惯，<br>
+最近突然觉得想要提高自己的能力，<br>
+除了不断看书、学习，<br>
+及时地总结新学会的东西是很有必要的。<br>
+所以，以后打算将平时写的代码、总结的笔记都放到github上面来。

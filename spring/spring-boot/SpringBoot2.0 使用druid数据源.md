@@ -52,8 +52,12 @@ spring:
 4. 在代码中使用一下代码，就可以正常使用druid了
 
    ```java
-   @Resource
-   private DataSource dataSource;
+   @Repository
+   public class UserDaoImpl{
+       @Resource
+       private DataSource dataSource;   
+   } 
+
    ```
 
    
