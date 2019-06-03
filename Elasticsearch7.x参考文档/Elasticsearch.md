@@ -1,0 +1,141 @@
+#### 自动创建ID
+
+如果索引操作没有提供ID，则Elasticsearch会自动创建一个ID。并且把op_type的值设为create。
+
+这里要用POST，而不能用PUT。
+
+```http
+curl -X POST "localhost:9200/twitter/_doc/" -H 'Content-Type: application/json' -d'
+{
+    "user" : "kimchy",
+    "post_date" : "2009-11-15T14:12:12",
+    "message" : "trying out Elasticsearch"
+}
+'
+```
+
+操作结果：
+
+```http
+{
+    "_shards" : {
+        "total" : 2,
+        "failed" : 0,
+        "successful" : 1
+    },
+    "_index" : "twitter",
+    "_type" : "_doc",
+    "_id" : "W0tpsmIBdwcYyG50zbta",
+    "_version" : 1,
+    "_seq_no" : 0,
+    "_primary_term" : 1,
+    "result": "created"
+}
+```
+
+---
+
+#### 路由
+
+文档存放在哪个碎片上，默认情况下，是由文档ID的hash值决定的；
+
+当有路由时，则是由路由的hash值和ID的hash值共同决定；
+
+拥有相同路由的文档会被存放在相同的碎片中；
+
+路由如果被定义为必要的，不提供路由值将会导致操作失败。
+
+```http
+curl -X POST "localhost:9200/twitter/_doc?routing=kimchy" -H 'Content-Type: application/json' -d'
+{
+    "user" : "kimchy",
+    "post_date" : "2009-11-15T14:12:12",
+    "message" : "trying out Elasticsearch"
+}
+'
+```
+
+---
+
+####  Wait For Active Shards
+
+索引操作执行前，要先确定一定数量的碎片是否处于活跃状态；
+
+默认情况下，只要主碎片是活跃的（即：`wait_for_active_shards`=1);
+
+可以通过索引设置动态改变这个值，
+
+`index.write.wait_for_active_shards`: 
+
+值可以为all 或者 任何一个小于或等于每个碎片的副本数量的正数（`number_of_replicas`+1），
+
+负数或者大于副本数量的数会抛出一个错误。
+
+**例子**
+
+一个有三个节点（A，B，C）的集群，每个索引有3个副本（number_of_replicas=3，也就是每个碎片有四个副本，比节点数多1)。
+
+* 默认情况，只要主碎片的副本活跃，即可以执行索引操作。也就是说，如果B和C宕机了，只要放有主碎片的节点A活跃，操作便可执行。
+* 如果将`wait_for_active_shards`=3，正好有3个节点，每个节点上有一个索引碎片，满足参数的设定，因此可以执行操作。
+* 如果将`wait_for_active_shards`=4，我们无法获得4个索引副本，索引操作将会超时，除非将一个新节点加入集群当中。
+
+---
+
+#### 刷新
+
+控制本次操作的结果，什么时候对查询是可见的
+
+#### 空操作更新
+
+当使用索引API更新文档时，即使文档没有更改，也总是会创建文档的新版本。如果这是不可接受的，使用_update API，将detect_noop设置为true。此选项在索引API上不可用，因为索引API不获取旧源，也不能将其与新源进行比较。
+
+#### 超时
+
+默认情况下，主碎片一分钟内无反应，索引操作将会执行失败并返回一个错误。
+
+参数`timeout`可以改变这个等待时长。
+
+```http
+curl -X PUT "localhost:9200/twitter/_doc/1?timeout=5m" -H 'Content-Type: application/json' -d'
+{
+    "user" : "kimchy",
+    "post_date" : "2009-11-15T14:12:12",
+    "message" : "trying out Elasticsearch"
+}
+'
+```
+
+#### 版本控制
+
+索引的每个文档都会有一个版本值，默认从1开始；在每次更新或者删除时，版本值增加；
+
+索引操作可以通过参数version_type=external提供一个外部的版本号（ >= 0 && <= 9.2e+18）；
+
+使用外部版本号时，系统会检测索引操作传入的版本值是否大于文档当前的版本；如果是，操作将会执行，并且更新文档的版本为指定的外部版本；如果小于或等于文档当前的版本，将会发生版本冲突，导致执行失败。
+
+```http
+curl -X PUT "localhost:9200/twitter/_doc/1?version=2&version_type=external" -H 'Content-Type: application/json' -d'
+{
+    "message" : "elasticsearch now has versioning support, double cool!"
+}
+'
+```
+
+#### 版本类型
+
+以下是Elasticsearch支持的版本类型，以及各类型的语法：
+
+`internal`
+
+只有当给定的版本与存储的文档版本相同时，才索引文档。
+
+`external` 或者 `external_gt`
+
+只有当给定的版本严格高于存储文档的版本，或者没有现有文档时，才对文档进行索引。给定的版本将作为新版本使用，并与新文档一起存储。所提供的版本必须是非负的长数字。
+
+`external_gte`
+
+只有当给定的版本等于或高于存储文档的版本时，才对文档进行索引。如果没有现有文档，操作也将成功。给定的版本将作为新版本使用，并与新文档一起存储。所提供的版本必须是非负的长数字。
+
+> 注意：external_gte版本类型用于特殊的用例，应该谨慎使用。如果使用不当，可能会导致数据丢失。
+
