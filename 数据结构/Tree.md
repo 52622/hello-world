@@ -24,7 +24,7 @@ https://my.oschina.net/u/3272058/blog/1914452
 4. 每个红色节点的子节点都是黑色（也就是说不存在两个连续的红色节点，父节点和子节点不能同时为红色）
 5. 从任一节点到其每个叶节点的所有路径都包含相同数目的黑色节点
 
-![红黑树](E:\YiXun\workspace\hello-world\数据结构\images\红黑树.png)
+![红黑树](images\红黑树.png)
 
 
 
@@ -47,7 +47,7 @@ https://my.oschina.net/u/3272058/blog/1914452
 
 
 
-![](E:\YiXun\workspace\hello-world\数据结构\images\红黑树删除结点的叫法约定.png)
+![](images\红黑树删除结点的叫法约定.png)
 
 **删除**
 
