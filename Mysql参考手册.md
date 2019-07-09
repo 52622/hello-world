@@ -1,18 +1,10 @@
-**`date_format`**
+#### 1.连接MySQL
 
-```sql
-select date_format(now(),'%Y-%m-%d %T');
-select date_format(now(),'%Y-%m-%d %H:%i:%s');
-```
+格式： mysql -h主机地址 -u用户名 －p用户密码
 
-**`sub_str`**
+---
 
-```sql
-select substr('2019-06-23 23:59:59' from 1 for 10);
-select concat(substr('2019-06-23 23:59:59',1,10),',',substr('2019-06-23 23:59:59',12,8));
-```
-
-#### 存储过程
+#### 2.存储过程
 
 ```sql
 -- 基本格式
@@ -150,6 +142,99 @@ end if;
 end loop;  
 end;   
 ```
+一个例子
+```sql
+CREATE PROCEDURE proc_list(in tableName varchar(100), in startTime varchar(20))
+begin 
+	declare m_sql LONGTEXT;
+	set m_sql = 'select * from tableName where sex != \'0\' and updateTime >= startTime';
+	set m_sql = replace(m_sql,'tableName',tableName);
+	set m_sql = replace(m_sql,'startTime',concat('\'',startTime,'\''));
+	-- select m_sql;
+	set @m_sql = m_sql;
+	prepare s1 from @m_sql;
+	EXECUTE s1;
+	DEALLOCATE prepare s1;
+end
+```
+---
+
+#### 3.函数
+
+**`date_format`**
+
+```sql
+select date_format(now(),'%Y-%m-%d %T');
+select date_format(now(),'%Y-%m-%d %H:%i:%s');
+```
+
+**`sub_str`**
+
+```sql
+select substr('2019-06-23 23:59:59' from 1 for 10);
+select concat(substr('2019-06-23 23:59:59',1,10),',',substr('2019-06-23 23:59:59',12,8));
+```
+
+
 
 ---
 
+#### 4.`alter`命令
+
+1.改表格的列的名称和属性
+
+alter table [表名] change [旧列名] [新列名] 属性。
+
+```sql
+alter table user change name user_name varchar(50) default null; 
+```
+
+2.修改表名
+
+命令：rename table 原表名 to 新表名;
+
+3.增加字段
+
+命令：alter table 表名 add 字段 类型 其他;
+
+```sql
+-- 例如：在表MyClass中添加了一个字段passtest，类型为int(4)，默认值为0
+alter table MyClass add passtest int(4) default '0'
+```
+
+4.加索引
+   mysql> alter table 表名 add index 索引名 (字段名1[，字段名2 …]);
+
+```sql
+alter table employee add index emp_name (name);
+```
+
+5.加主关键字的索引
+  mysql> alter table 表名 add primary key (字段名);
+
+```sql
+alter table employee add primary key(id);
+```
+
+6.加唯一限制条件的索引
+   mysql> alter table 表名 add unique 索引名 (字段名);
+
+```sql
+alter table employee add unique emp_name2(cardnumber);
+```
+
+7.删除某个索引
+   mysql> alter table 表名 drop index 索引名;
+
+```sql
+alter table employee drop index emp_name;
+```
+
+8.删除字段
+ALTER TABLE table_name DROP field_name;
+
+#### 修改密码
+
+格式：mysqladmin -u用户名 -p旧密码 password 新密码
+
+  
