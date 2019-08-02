@@ -384,3 +384,18 @@ set global slow_query_log_file='/var/lib/mysql/test_1116.log';
 查看记录文件
 
 show variables like 'slow_query_log_file';
+
+
+
+#### [int(M)和tinyint(M)数值类型中M值的意义](https://www.cnblogs.com/totian/p/7065123.html)
+
+1、整数型的数值类型已经限制了取值范围，有符号整型和无符号整型都有，而M值并不代表可以存储的数值字符长度，它代表的是数据在显示时显示的最小长度；
+
+2、当存储的字符长度超过M值时，没有任何的影响，只要不超过数值类型限制的范围；
+
+3、当存储的字符长度小于M值时，只有在设置了zerofill用0来填充，才能够看到效果，换句话就是说，没有zerofill，M值就是无用的。
+
+总结：int(11)，tinyint(1)，bigint(20)，后面的数字，不代表占用空间容量。而代表最小显示位数。这个东西基本没有意义，除非你对字段指定zerofill。
+
+![](dataType.png)
+
