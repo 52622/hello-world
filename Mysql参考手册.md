@@ -233,13 +233,19 @@ alter table employee drop index emp_name;
 8.删除字段
 ALTER TABLE table_name DROP field_name;
 
+9.加备注
+表：
+alter table table_name comment '注释';
+字段：
+alter table table_name modify column field_name type comment '注释';
+
 #### 修改密码
 
 格式：mysqladmin -u用户名 -p旧密码 password 新密码
 
   
 
-#### join 匹配原理
+#### 5.join 匹配原理
 
 https://www.cnblogs.com/LQBlog/p/10711743.html
 
@@ -261,7 +267,7 @@ https://www.cnblogs.com/LQBlog/p/10711743.html
 
 
 
-#### 执行计划
+#### 6.执行计划
 https://www.cnblogs.com/LQBlog/p/10723158.html
 
 `id`
@@ -387,7 +393,25 @@ show variables like 'slow_query_log_file';
 
 
 
-#### [int(M)和tinyint(M)数值类型中M值的意义](https://www.cnblogs.com/totian/p/7065123.html)
+#### 7.grant的使用
+
+1.创建用户
+
+create user test identified by '12345';
+
+2.赋予用户configdb数据库上的select\insert\delete\update权限
+
+mysql>grant select,insert,delete,update on configdb.* to 'test'@'%';
+
+3.execute权限
+
+grant execute on configdb.* to 'test'@'%;
+
+4.显示用户拥有的权限
+
+show grants for test;
+
+#### *[int(M)和tinyint(M)数值类型中M值的意义](https://www.cnblogs.com/totian/p/7065123.html)
 
 1、整数型的数值类型已经限制了取值范围，有符号整型和无符号整型都有，而M值并不代表可以存储的数值字符长度，它代表的是数据在显示时显示的最小长度；
 
@@ -399,3 +423,10 @@ show variables like 'slow_query_log_file';
 
 ![](dataType.png)
 
+##### *让查询强制走索引
+select * from 表名 force index(索引名)
+
+##### *有索引未使用到的情况：
+1.查询的数据量占数据总量很大的比例
+2.针对两个表通过某个字符列关联，有可能是该列的排序规则不同
+3.优化器任务使用索引对查询速度的提升并不多，所以不走索引
