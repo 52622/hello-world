@@ -287,7 +287,7 @@ https://www.cnblogs.com/LQBlog/p/10723158.html
 
 查询的指标 结果从优劣从优到劣排序为
 
-system > const > eq_ref > ref > fulltext > ref_or_null > index_merge > unique_subquery > index_subquery > range > index > ALL
+*system* > *const* > *eq_ref* > *ref* > *fulltext* > *ref_or_null* > *index_merge* > *unique_subquery* > *index_subquery* > *range* > `index` > *ALL*
 
 **一般来说，好的sql查询至少达到range级别，最好能达到ref**
 
