@@ -1,0 +1,21 @@
+https://blog.csdn.net/QIANGWEIYUAN/article/details/93863807
+
+1.下载并安装Ultimate版IDEA 2019.1.x的最新版本
+https://www.jetbrains.com/idea/download/other.html
+
+2.将JetbrainsCrack.jar破解包放到idea安装路径的bin目录下
+
+3.启动idea
+
+4.打开菜单：Help->Edit Custome VM Options...,
+如果没有idea64.exe.options文件，idea会提示是否创建该文件，
+在最后一行添加破解jar的绝对路径
+如：-javaagent:D:\IntelliJ IDEA 2019.1.2\bin\JetbrainsCrack.jar
+
+5.重启idea，让idea加载破解jar
+
+6.打开菜单Help->Register,
+选择License server,
+在License server address 输入http://jetbrains-license-server，
+点击Test Connection 看是否成功，
+之后点击Activate，完成破解

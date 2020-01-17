@@ -192,6 +192,7 @@ alter table user change name user_name varchar(50) default null;
 2.修改表名
 
 命令：rename table 原表名 to 新表名;
+alter table 原表名 rename to/as 新表名
 
 3.增加字段
 
