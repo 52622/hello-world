@@ -422,7 +422,7 @@ show grants for test;
 
 总结：int(11)，tinyint(1)，bigint(20)，后面的数字，不代表占用空间容量。而代表最小显示位数。这个东西基本没有意义，除非你对字段指定zerofill。
 
-![](dataType.png)
+![](../../工具/dataType.png)
 
 ##### *让查询强制走索引
 select * from 表名 force index(索引名)
